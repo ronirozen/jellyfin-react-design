@@ -2,13 +2,13 @@
   "compilerOptions": {
     "target": "ESNext",
     "allowJs": true,
-    "allowNonTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "jsx": "react",
-    "reactNamespace": "React",
+    "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "Node",
     "sourceMap": true,
+    "baseUrl": "./",
     "paths": {
       "~/*": ["*"],
       "@divriots/starter-react-aria/*": ["*"]

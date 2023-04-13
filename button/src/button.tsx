@@ -1,49 +1,53 @@
-import * as React from 'react';
-const { useRef } = React;
-import type { ElementType, HTMLAttributes } from 'react';
-import type { AriaButtonProps } from '@react-types/button';
-import { useButton } from '@react-aria/button';
+import { ButtonHTMLAttributes, DetailedHTMLProps, FC } from 'react';
+
+// Style
 import styles from './button.module.scss';
 
-export type ButtonProps = AriaButtonProps<ElementType> & {
-  /**
-  Use the size prop to change the size of the button. You can set the value to 'small', 'medium' or 'large'.
-   */
-  size?: 'small' | 'medium' | 'large';
-  /**
-  Boolean flag indicating if should render as 'primary' variation.
-   */
-  primary?: boolean;
-  /**
-  Boolean flag indicating if should render as 'secondary' variation.
-   */
-  secondary?: boolean;
-};
+const iconPosition = {
+  LEFT: 'LEFT',
+  RIGHT: 'RIGHT',
+} as const;
 
-/**
-  The Button component is used to trigger an action or event, such as submitting a form, opening a dialog, canceling an action, or performing a delete operation.
-*/
-export const Button = ({
+interface ButtonProps
+  extends DetailedHTMLProps<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
+  icon?: string;
+  isShowFocus?: boolean;
+  iconClassName?: string;
+  size?: 'small' | 'medium' | 'large';
+  iconPos?: typeof iconPosition[keyof typeof iconPosition];
+}
+
+export const Button: FC<ButtonProps> = ({
+  icon,
+  title,
+  iconPos,
+  onClick,
+  className,
+  isShowFocus,
+  iconClassName,
   size = 'medium',
-  primary = true,
-  secondary = false,
   ...rest
-}: ButtonProps) => {
-  const ref = useRef();
-  const { buttonProps } = useButton(rest, ref);
-  const { children } = rest;
+}) => {
+  const iconClass = `${styles['material-icons']} ${styles[icon]} ${iconClassName}`;
 
   return (
     <button
-      {...buttonProps}
-      ref={ref}
-      className={`
-      ${styles.button} ${styles[size]}
-      ${secondary ? styles.secondary : ''}
-      ${rest.isDisabled ? styles.disabled : ''}
-      `}
+      onClick={onClick}
+      className={`${styles['emby-button']} ${styles[size]} ${className} ${
+        isShowFocus ? styles['show-focus'] : ''
+      }`}
+      {...rest}
     >
-      {children}
+      {icon && iconPos === iconPosition.LEFT && (
+        <span className={iconClass} aria-hidden="true" />
+      )}
+      <span>{title}</span>
+      {icon && iconPos === iconPosition.RIGHT && (
+        <span className={iconClass} aria-hidden="true" />
+      )}
     </button>
   );
 };
